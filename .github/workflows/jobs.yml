@@ -7,7 +7,7 @@ name: ✨ Jobs
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -60,7 +60,7 @@ jobs:
     permissions: write-all
     needs: build
 
-    if: contains(github.event.head_commit.message, 'PUBLISH')
+    if: contains(github.event.head_commit.message, 'PUBLISH') && github.ref == 'refs/heads/main' && github.repository == 'Paulem79/Named-Villagers'
 
     steps:
       - name: ✅ Checkout repository
