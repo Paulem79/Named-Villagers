@@ -49,7 +49,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.14.1-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
 }
