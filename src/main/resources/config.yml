@@ -1,0 +1,6 @@
+# Allow male names to be used
+# Default: true
+allow-male: true
+# Allow female names to be used
+# Default: true
+allow-female: true

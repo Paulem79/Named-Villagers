@@ -1,0 +1,10 @@
+name: Named-Villagers
+main: ovh.paulem.namedvillagers.NamedVillagers
+version: 1.0
+author: Paulem
+description: Gives all villager entities a default or custom name to liven up the world.
+load: STARTUP
+website: https://paulem.ovh
+api-version: 1.14
+depend:
+  - ProtocolLib
