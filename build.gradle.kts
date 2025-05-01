@@ -103,6 +103,12 @@ tasks.shadowJar {
     relocate("org.bstats", "ovh.paulem.namedvillagers.libs.bstats")
     relocate("com.jeff_media.updatechecker", "ovh.paulem.namedvillagers.libs.updatechecker")
 
+    // Use UniversalScheduler from SpigotUpdateChecker instead of the one from implementation
+    exclude("com/github/Anon8281/universalScheduler/*Scheduler/**")
+    exclude("com/github/Anon8281/universalScheduler/scheduling/**")
+    exclude("com/github/Anon8281/universalScheduler/utils/**")
+    exclude("com/github/Anon8281/universalScheduler/UniversalScheduler.**")
+
     relocate("com.github.Anon8281.universalScheduler", "ovh.paulem.namedvillagers.libs.updatechecker.universalScheduler")
 
     minimize()
