@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ovh.paulem.namedvillagers.NamedVillagers;
 import ovh.paulem.namedvillagers.generator.api.query.QueryBuilder;
-import ovh.paulem.namedvillagers.utils.GsonUtil;
+import ovh.paulem.namedvillagers.utils.GsonUtils;
 
 public abstract class ApiGate {
     private final API type;
@@ -25,8 +25,8 @@ public abstract class ApiGate {
     @Nullable
     public JsonObject getResponse() {
         try {
-            String s = GsonUtil.readUrl(getBuilder().build());
-            return new Gson().fromJson(s, JsonObject.class);
+            String jsonContent = GsonUtils.readUrl(getBuilder().build());
+            return new Gson().fromJson(jsonContent, JsonObject.class);
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while getting the response from the API: " + getType(), e);
         }

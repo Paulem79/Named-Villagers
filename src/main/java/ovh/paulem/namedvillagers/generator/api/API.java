@@ -23,6 +23,7 @@ public enum API {
         this.apiGate = apiGate;
     }
 
+    @Nullable
     public Class<? extends ApiGate> getApiGate() {
         return apiGate;
     }

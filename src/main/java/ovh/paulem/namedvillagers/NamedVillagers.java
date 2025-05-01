@@ -1,6 +1,5 @@
 package ovh.paulem.namedvillagers;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import com.github.Anon8281.universalScheduler.UniversalScheduler;
 import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
@@ -21,7 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import ovh.paulem.namedvillagers.config.ConfigManager;
 import ovh.paulem.namedvillagers.generator.NameGenerator;
-import ovh.paulem.namedvillagers.packet.PacketListenerVillagerInventory;
+import ovh.paulem.namedvillagers.protocollib.ProtocolLibCompat;
 import ovh.paulem.namedvillagers.utils.Names;
 import ovh.paulem.namedvillagers.utils.Versioning;
 
@@ -69,7 +68,7 @@ public class NamedVillagers extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         if(Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
-            ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListenerVillagerInventory());
+            new ProtocolLibCompat().enable();
         }
 
         // bStats

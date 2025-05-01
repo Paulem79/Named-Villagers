@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers.packet;
+package ovh.paulem.namedvillagers.protocollib;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
