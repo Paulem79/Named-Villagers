@@ -53,7 +53,7 @@ repositories {
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.14.1-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
-    implementation("commons-io:commons-io:2.14.0")
+    implementation("commons-io:commons-io:2.19.0")
 
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
 
