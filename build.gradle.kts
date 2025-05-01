@@ -51,7 +51,7 @@ dependencies {
 
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
 
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 }
 
 // ------------------------ PROGUARD ------------------------
