@@ -1,37 +1,38 @@
 package ovh.paulem.namedvillagers;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
+import com.jeff_media.updatechecker.UpdateCheckSource;
+import com.jeff_media.updatechecker.UpdateChecker;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.AbstractVillager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import ovh.paulem.namedvillagers.config.ConfigManager;
 import ovh.paulem.namedvillagers.generator.NameGenerator;
-import ovh.paulem.namedvillagers.utils.EntityUtilities;
+import ovh.paulem.namedvillagers.packet.PacketListenerVillagerInventory;
 import ovh.paulem.namedvillagers.utils.Names;
 import ovh.paulem.namedvillagers.utils.Versioning;
 
-import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class NamedVillagers extends JavaPlugin implements Listener {
+    private static NamedVillagers instance;
+    private static TaskScheduler scheduler;
 
     public static NamespacedKey PDC_NAMEDVILLAGER;
 
@@ -39,53 +40,53 @@ public class NamedVillagers extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        if(!Versioning.isPost(14, 1)){
-            getLogger().severe("Your server must be >= 1.14.1 to use this plugin!");
+        if(!Versioning.isPost(14)){
+            getLogger().severe("Your server must be newer than or in 1.14.1 to use this plugin!");
             setEnabled(false);
+
             return;
         }
 
+        instance = this;
+
+        saveDefaultConfig();
+        new ConfigManager(this).migrate();
+
+        scheduler = UniversalScheduler.getScheduler(this);
+
         PDC_NAMEDVILLAGER = new NamespacedKey(this, "namedvillager");
-        generator = new NameGenerator(this);
+        try {
+            generator = new NameGenerator();
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            getLogger().severe("An error occurred while initializing the name generator!");
+            setEnabled(false);
+
+            return;
+        }
+
         generator.load();
 
         getServer().getPluginManager().registerEvents(this, this);
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(this, PacketType.Play.Server.OPEN_WINDOW) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-                if (event.getPacketType() != PacketType.Play.Server.OPEN_WINDOW) {
-                    return;
-                }
-                PacketContainer packet = event.getPacket();
-
-                Matcher matcher = Pattern.compile("insertion=([^}]+)").matcher(packet.getModifier().read(2).toString());
-
-                String uuid = null;
-                if (matcher.find()) {
-                    uuid = matcher.group(1);
-                }
-
-                if(uuid == null) return;
-
-                Villager villager = EntityUtilities.getEntityByUniqueId(UUID.fromString(uuid), Villager.class);
-
-                if(villager == null || villager.getCustomName() == null) return;
-
-                Villager.Profession profession = villager.getProfession();
-                String professionName = profession.name();
-                if(profession == Villager.Profession.NITWIT || profession == Villager.Profession.NONE){
-                    professionName = "Idiot";
-                }
-
-                packet.getChatComponents().write(0, WrappedChatComponent.fromText(
-                        villager.getCustomName() + " the " + Names.capitalizeEveryWord(professionName)
-                ));
-            }
-        });
+        if(Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+            ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListenerVillagerInventory());
+        }
 
         // bStats
-        new Metrics(this, 21553);
+        if(getConfig().getBoolean("bstats")) {
+            Metrics metrics = new Metrics(this, 21553);
+
+            metrics.addCustomChart(new SimplePie("gender", () -> getConfig().getString("gender", "BOTH")));
+            metrics.addCustomChart(new SimplePie("api_type", () -> getConfig().getString("api.type", "NONE")));
+            metrics.addCustomChart(new SimplePie("api_country_code", () -> getConfig().getString("api.country-code", "NULL")));
+        }
+
+        final int SPIGOT_RESOURCE_ID = 124627;
+        new UpdateChecker(this, UpdateCheckSource.SPIGET, String.valueOf(SPIGOT_RESOURCE_ID))
+                .checkEveryXHours(24)
+                .setNotifyOpsOnJoin(true)
+                .setDownloadLink(SPIGOT_RESOURCE_ID)
+                .checkNow(); // And check right now
 
         getLogger().info("Enabled " + getName() + "!");
     }
@@ -97,12 +98,10 @@ public class NamedVillagers extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onVillagerSpawn(CreatureSpawnEvent e){
-        if(e.getEntity() instanceof Villager){
-            Villager villager = (Villager) e.getEntity();
+        if(e.getEntity() instanceof AbstractVillager){
+            AbstractVillager abstractVillager = (AbstractVillager) e.getEntity();
 
-            villager.getPersistentDataContainer().set(PDC_NAMEDVILLAGER, PersistentDataType.BYTE, (byte) 1);
-
-            setVillagerName(villager);
+            setVillagerName(abstractVillager);
         }
     }
 
@@ -111,10 +110,43 @@ public class NamedVillagers extends JavaPlugin implements Listener {
         setVillagerName(e.getEntity());
     }
 
-    public void setVillagerName(Villager villager){
-        String oldname = villager.getCustomName();
+    @EventHandler(priority = EventPriority.LOW)
+    public void onChunkLoad(ChunkLoadEvent e){
+        List<AbstractVillager> collected = Arrays.stream(e.getChunk().getEntities())
+                .filter(entity -> entity instanceof AbstractVillager && !entity.getPersistentDataContainer().has(PDC_NAMEDVILLAGER, PersistentDataType.BYTE))
+                .map(entity -> (AbstractVillager) entity)
+                .collect(Collectors.toList());
 
-        String finalName = Names.capitalizeEveryWord((oldname != null ? oldname : generator.getRandomName()));
-        villager.setCustomName(finalName);
+        for (AbstractVillager abstractVillager : collected) {
+            if (!abstractVillager.getPersistentDataContainer().has(PDC_NAMEDVILLAGER, PersistentDataType.BYTE)) {
+                setVillagerName(abstractVillager);
+            }
+        }
+    }
+
+    public void setVillagerName(AbstractVillager abstractVillager){
+        getScheduler().runTaskAsynchronously(new UniversalRunnable() {
+            @Override
+            public void run() {
+                String oldname = abstractVillager.getCustomName();
+
+                String finalName = Names.capitalizeEveryWord((oldname != null ? oldname : generator.getRandomName()));
+                abstractVillager.setCustomName(finalName);
+
+                abstractVillager.getPersistentDataContainer().set(PDC_NAMEDVILLAGER, PersistentDataType.BYTE, (byte) 1);
+            }
+        });
+    }
+
+    public NameGenerator getGenerator() {
+        return generator;
+    }
+
+    public static TaskScheduler getScheduler() {
+        return scheduler;
+    }
+
+    public static NamedVillagers getInstance() {
+        return instance;
     }
 }

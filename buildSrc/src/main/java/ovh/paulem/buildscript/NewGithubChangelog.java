@@ -12,7 +12,7 @@ public class NewGithubChangelog {
             GitHub gitHub = new GitHubBuilder()
                     .build();
 
-            GHRepository repository = gitHub.getRepository("Paulem79/NamedVillagers");
+            GHRepository repository = gitHub.getRepository("Paulem79/Named-Villagers");
 
             StringBuilder changelog = new StringBuilder("This version is uploaded automatically by GitHub Actions.")
                     .append("\n\nChangelog:");
