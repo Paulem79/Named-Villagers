@@ -26,7 +26,12 @@ api:
   # Default: NULL
   country-code: NULL
 
+# Add a prefix to the illagers. You can do things like "Evil [NAME]" by typing illager-prefix: "Evil"
+# default: "" or NULL
+illager-prefix: ""
+
 # Send anonymous statistics to the developer
 bstats: true
 
-version: 1
+# DON'T TOUCH THIS
+version: 2

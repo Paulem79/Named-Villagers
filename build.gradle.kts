@@ -23,7 +23,7 @@ buildscript {
 }
 
 group = "ovh.paulem.namedvillagers"
-version = "1.1"
+version = "1.2"
 
 // ------------------------ REPOSITORIES ------------------------
 repositories {

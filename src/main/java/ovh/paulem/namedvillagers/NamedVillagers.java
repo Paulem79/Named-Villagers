@@ -10,6 +10,9 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.AbstractVillager;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Illager;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -97,10 +100,12 @@ public class NamedVillagers extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onVillagerSpawn(CreatureSpawnEvent e){
-        if(e.getEntity() instanceof AbstractVillager){
-            AbstractVillager abstractVillager = (AbstractVillager) e.getEntity();
+        LivingEntity entity = e.getEntity();
 
-            setVillagerName(abstractVillager);
+        if(entity instanceof AbstractVillager || entity instanceof Illager){
+            Creature villagerLike = (Creature) entity;
+
+            setVillagerName(villagerLike);
         }
     }
 
@@ -111,30 +116,45 @@ public class NamedVillagers extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onChunkLoad(ChunkLoadEvent e){
-        List<AbstractVillager> collected = Arrays.stream(e.getChunk().getEntities())
-                .filter(entity -> entity instanceof AbstractVillager && !entity.getPersistentDataContainer().has(PDC_NAMEDVILLAGER, PersistentDataType.BYTE))
-                .map(entity -> (AbstractVillager) entity)
+        List<Creature> collected = Arrays.stream(e.getChunk().getEntities())
+                .filter(entity -> (entity instanceof AbstractVillager || entity instanceof Illager) && !entity.getPersistentDataContainer().has(PDC_NAMEDVILLAGER, PersistentDataType.BYTE))
+                .map(entity -> (Creature) entity)
                 .collect(Collectors.toList());
 
-        for (AbstractVillager abstractVillager : collected) {
-            if (!abstractVillager.getPersistentDataContainer().has(PDC_NAMEDVILLAGER, PersistentDataType.BYTE)) {
-                setVillagerName(abstractVillager);
+        for (Creature villagerLike : collected) {
+            if (!villagerLike.getPersistentDataContainer().has(PDC_NAMEDVILLAGER, PersistentDataType.BYTE)) {
+                setVillagerName(villagerLike);
             }
         }
     }
 
-    public void setVillagerName(AbstractVillager abstractVillager){
+    public void setVillagerName(Creature abstractVillager){
         getScheduler().runTaskAsynchronously(new UniversalRunnable() {
             @Override
             public void run() {
                 String oldname = abstractVillager.getCustomName();
 
                 String finalName = Names.capitalizeEveryWord((oldname != null ? oldname : generator.getRandomName()));
-                abstractVillager.setCustomName(finalName);
+
+                if(abstractVillager instanceof Illager) {
+                    abstractVillager.setCustomName(getIllagerPrefix() + finalName);
+                } else {
+                    abstractVillager.setCustomName(finalName);
+                }
 
                 abstractVillager.getPersistentDataContainer().set(PDC_NAMEDVILLAGER, PersistentDataType.BYTE, (byte) 1);
             }
         });
+    }
+
+    private final String illagerPrefix = getConfig().getString("illager-prefix", "");
+
+    private String getIllagerPrefix() {
+        if(illagerPrefix == null || illagerPrefix.isEmpty()) {
+            return "";
+        } else {
+            return illagerPrefix + " ";
+        }
     }
 
     public NameGenerator getGenerator() {
