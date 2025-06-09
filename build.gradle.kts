@@ -63,7 +63,7 @@ dependencies {
         exclude(group = "com.github.Anon8281", module = "UniversalScheduler")
         exclude(group = "com.jeff_media.updatechecker.universalScheduler")
     }
-    implementation("com.github.Anon8281:UniversalScheduler:0.1.6")
+    implementation("com.github.Anon8281:UniversalScheduler:0.1.7")
 }
 
 // ------------------------ PROGUARD ------------------------
