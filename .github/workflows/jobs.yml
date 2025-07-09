@@ -1,0 +1,95 @@
+# Automatically build the project and run any configured tests for every push
+# and submitted pull request. This can help catch issues that only occur on
+# certain platforms or Java versions, and provides a first line of defense
+# against bad commits.
+
+name: ✨ Jobs
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: 🔨 Build gradle project
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🪄 Cache gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ./.gradle/loom-cache
+          key: ${{ runner.os }}-gradle0-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle0-
+
+      - name: ✅ Validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: 🛠️ Setup jdk 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 21
+          java-package: jdk
+
+      - name: 🆙 Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: 🔨 Build project
+        run: ./gradlew build
+
+      - name: ✅ Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifacts
+          path: build/libs/
+
+  publish:
+    name: 🚀 Publish
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs: build
+
+    if: contains(github.event.head_commit.message, 'PUBLISH') && github.ref == 'refs/heads/main' && github.repository == 'Paulem79/Named-Villagers'
+
+    steps:
+      - name: ✅ Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ✅ Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+          path: build/libs/
+
+      - name: 🆙 Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: ⬆️ Upload to Modrinth
+        run: ./gradlew modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_UPLOAD_TOKEN }}
+          GITHUB_EVENT_RAW_PATH: ${{ github.event_path }}
+        continue-on-error: true
+
+      - name: 🔁 Generate as development build
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "dev"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            build/libs/*.jar
