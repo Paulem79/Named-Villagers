@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.kohsuke:github-api:1.327")
+    implementation("org.kohsuke:github-api:1.330")
 }
 
 
