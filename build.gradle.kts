@@ -186,10 +186,6 @@ tasks.build {
 }
 
 java {
-    withSourcesJar()
-}
-
-java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
