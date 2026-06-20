@@ -1,9 +1,9 @@
-package ovh.paulem.namedvillagers.utils;
+package net.paulem.namedvillagers.utils;
 
 import com.google.common.base.Charsets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import ovh.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.NamedVillagers;
 
 import java.io.*;
 

@@ -1,7 +1,7 @@
-package ovh.paulem.namedvillagers.generator.api.query;
+package net.paulem.namedvillagers.generator.api.query;
 
 import org.jetbrains.annotations.Nullable;
-import ovh.paulem.namedvillagers.generator.api.ApiGate;
+import net.paulem.namedvillagers.generator.api.ApiGate;
 
 import java.util.LinkedList;
 

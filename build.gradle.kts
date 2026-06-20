@@ -1,6 +1,5 @@
 import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
-import ovh.paulem.buildscript.NewGithubChangelog
-import proguard.gradle.ProGuardTask
+import net.paulem.buildscript.NewGithubChangelog
 
 plugins {
     id("java")
@@ -11,19 +10,8 @@ plugins {
     id("dev.s7a.gradle.minecraft.server") version "3.2.1"
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.guardsquare:proguard-gradle:7.+") {
-            exclude("com.android.tools.build")
-        }
-    }
-}
-
-group = "ovh.paulem.namedvillagers"
-version = "1.2"
+group = "net.paulem.namedvillagers"
+version = "1.2.1"
 
 // ------------------------ REPOSITORIES ------------------------
 repositories {
@@ -38,20 +26,17 @@ repositories {
             includeGroup("org.spigotmc")
         }
     }
-    maven {
-        name = "jeffMediaPublic"
-        url = uri("https://repo.jeff-media.com/public")
-    }
 
-    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
-    maven { url = uri("https://oss.sonatype.org/content/repositories/central") }
+    maven("https://maven.paulem.net/releases")
+
+    maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
 
     maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 // ------------------------ DEPENDENCIES ------------------------
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.14.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("org.jetbrains:annotations:26.0.2")
     implementation("commons-io:commons-io:2.19.0")
 
@@ -66,30 +51,6 @@ dependencies {
     implementation("com.github.Anon8281:UniversalScheduler:0.1.7")
 }
 
-// ------------------------ PROGUARD ------------------------
-tasks.register<ProGuardTask>("proguardJar") {
-    outputs.upToDateWhen { false }
-    dependsOn(tasks.shadowJar)
-    configuration("proguard-rules.pro")
-
-    injars(tasks.shadowJar)
-    outjars(file("build/libs/temp-${tasks.shadowJar.get().archiveFileName.get()}"))
-
-    finalizedBy("finalizeJar")
-}
-
-// Rename the final proguard jar to the original shadowJar name
-tasks.register("finalizeJar") {
-    dependsOn("proguardJar")
-    doLast {
-        val shadowJarFile = tasks.shadowJar.get().archiveFile.get().asFile
-        val proguardedJarFile = file("build/libs/temp-${tasks.shadowJar.get().archiveFileName.get()}")
-
-        shadowJarFile.delete()
-        proguardedJarFile.renameTo(shadowJarFile)
-    }
-}
-
 // ------------------------ SHADOW JAR ------------------------
 artifacts.archives(tasks.shadowJar)
 
@@ -100,8 +61,8 @@ tasks.shadowJar {
     exclude("LICENSE.txt")
     exclude("License-ASM.txt")
 
-    relocate("org.bstats", "ovh.paulem.namedvillagers.libs.bstats")
-    relocate("com.jeff_media.updatechecker", "ovh.paulem.namedvillagers.libs.updatechecker")
+    relocate("org.bstats", "net.paulem.namedvillagers.libs.bstats")
+    relocate("com.jeff_media.updatechecker", "net.paulem.namedvillagers.libs.updatechecker")
 
     // Use UniversalScheduler from SpigotUpdateChecker instead of the one from implementation
     exclude("com/github/Anon8281/universalScheduler/*Scheduler/**")
@@ -109,7 +70,7 @@ tasks.shadowJar {
     exclude("com/github/Anon8281/universalScheduler/utils/**")
     exclude("com/github/Anon8281/universalScheduler/UniversalScheduler.**")
 
-    relocate("com.github.Anon8281.universalScheduler", "ovh.paulem.namedvillagers.libs.updatechecker.universalScheduler")
+    relocate("com.github.Anon8281.universalScheduler", "net.paulem.namedvillagers.libs.updatechecker.universalScheduler")
 
     minimize()
 }
@@ -144,7 +105,7 @@ val foliaDir = rootDir.resolve("servers").resolve("folia")
 
 listOf("1.21.4").forEach { version ->
     tasks.register<LaunchMinecraftServerTask>("folia-$version") {
-        dependsOn("finalizeJar")
+        dependsOn(tasks.build)
 
         doFirst {
             copies(version, foliaDir)
@@ -221,14 +182,12 @@ tasks.build {
     mustRunAfter(tasks.clean)
     dependsOn(tasks.clean)
 
-    dependsOn("proguardJar")
+    dependsOn(tasks.shadowJar)
 }
 
 java {
     withSourcesJar()
 }
-
-tasks.jar { enabled = false }
 
 java {
     toolchain {

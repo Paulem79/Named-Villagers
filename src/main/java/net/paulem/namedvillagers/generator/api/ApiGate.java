@@ -1,12 +1,12 @@
-package ovh.paulem.namedvillagers.generator.api;
+package net.paulem.namedvillagers.generator.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ovh.paulem.namedvillagers.NamedVillagers;
-import ovh.paulem.namedvillagers.generator.api.query.QueryBuilder;
-import ovh.paulem.namedvillagers.utils.GsonUtils;
+import net.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.generator.api.query.QueryBuilder;
+import net.paulem.namedvillagers.utils.GsonUtils;
 
 public abstract class ApiGate {
     private final API type;

@@ -1,7 +1,7 @@
-package ovh.paulem.namedvillagers.config;
+package net.paulem.namedvillagers.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import ovh.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.NamedVillagers;
 
 public class ConfigManager {
     private final NamedVillagers plugin;

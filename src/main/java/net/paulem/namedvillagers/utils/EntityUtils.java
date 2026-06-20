@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers.utils;
+package net.paulem.namedvillagers.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

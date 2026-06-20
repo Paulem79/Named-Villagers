@@ -1,9 +1,9 @@
-package ovh.paulem.namedvillagers.config;
+package net.paulem.namedvillagers.config;
 
 import com.google.common.base.Charsets;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ovh.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.NamedVillagers;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,4 +1,4 @@
-package ovh.paulem.buildscript;
+package net.paulem.buildscript;
 
 import org.jetbrains.annotations.Nullable;
 import org.kohsuke.github.*;

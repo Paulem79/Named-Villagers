@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers.protocollib;
+package net.paulem.namedvillagers.protocollib;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -8,9 +8,9 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.WanderingTrader;
-import ovh.paulem.namedvillagers.NamedVillagers;
-import ovh.paulem.namedvillagers.utils.EntityUtils;
-import ovh.paulem.namedvillagers.utils.Names;
+import net.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.utils.EntityUtils;
+import net.paulem.namedvillagers.utils.Names;
 
 import java.util.UUID;
 import java.util.regex.Matcher;

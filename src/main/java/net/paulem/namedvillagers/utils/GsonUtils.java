@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers.utils;
+package net.paulem.namedvillagers.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

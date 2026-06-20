@@ -1,12 +1,12 @@
-package ovh.paulem.namedvillagers.generator.api.impl;
+package net.paulem.namedvillagers.generator.api.impl;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
-import ovh.paulem.namedvillagers.NamedVillagers;
-import ovh.paulem.namedvillagers.generator.api.API;
-import ovh.paulem.namedvillagers.generator.api.MultipleResultsApiGate;
-import ovh.paulem.namedvillagers.generator.api.query.QueryBuilder;
+import net.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.generator.api.API;
+import net.paulem.namedvillagers.generator.api.MultipleResultsApiGate;
+import net.paulem.namedvillagers.generator.api.query.QueryBuilder;
 
 public class NameParserGate extends MultipleResultsApiGate {
     public NameParserGate() {

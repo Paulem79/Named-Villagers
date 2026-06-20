@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers.protocollib;
+package net.paulem.namedvillagers.protocollib;
 
 import com.comphenix.protocol.ProtocolLibrary;
 

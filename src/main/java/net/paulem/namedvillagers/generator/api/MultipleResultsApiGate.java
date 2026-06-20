@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers.generator.api;
+package net.paulem.namedvillagers.generator.api;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ovh.paulem.namedvillagers;
+package net.paulem.namedvillagers;
 
 import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import com.github.Anon8281.universalScheduler.UniversalScheduler;
@@ -21,11 +21,10 @@ import org.bukkit.event.entity.VillagerCareerChangeEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import ovh.paulem.namedvillagers.config.ConfigManager;
-import ovh.paulem.namedvillagers.generator.NameGenerator;
-import ovh.paulem.namedvillagers.protocollib.ProtocolLibCompat;
-import ovh.paulem.namedvillagers.utils.Names;
-import ovh.paulem.namedvillagers.utils.Versioning;
+import net.paulem.namedvillagers.config.ConfigManager;
+import net.paulem.namedvillagers.generator.NameGenerator;
+import net.paulem.namedvillagers.protocollib.ProtocolLibCompat;
+import net.paulem.namedvillagers.utils.Names;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -42,13 +41,6 @@ public class NamedVillagers extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        if(!Versioning.isPost(14)){
-            getLogger().severe("Your server must be newer than or in 1.14.1 to use this plugin!");
-            setEnabled(false);
-
-            return;
-        }
-
         instance = this;
 
         saveDefaultConfig();

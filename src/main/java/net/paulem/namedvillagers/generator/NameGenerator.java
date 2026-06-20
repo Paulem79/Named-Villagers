@@ -1,14 +1,14 @@
-package ovh.paulem.namedvillagers.generator;
+package net.paulem.namedvillagers.generator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import org.jetbrains.annotations.Nullable;
-import ovh.paulem.namedvillagers.NamedVillagers;
-import ovh.paulem.namedvillagers.generator.api.API;
-import ovh.paulem.namedvillagers.generator.api.ApiGate;
-import ovh.paulem.namedvillagers.utils.FileUtils;
-import ovh.paulem.namedvillagers.utils.Names;
+import net.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.generator.api.API;
+import net.paulem.namedvillagers.generator.api.ApiGate;
+import net.paulem.namedvillagers.utils.FileUtils;
+import net.paulem.namedvillagers.utils.Names;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

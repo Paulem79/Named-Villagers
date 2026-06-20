@@ -1,8 +1,8 @@
-package ovh.paulem.namedvillagers.generator.api;
+package net.paulem.namedvillagers.generator.api;
 
 import org.jetbrains.annotations.Nullable;
-import ovh.paulem.namedvillagers.NamedVillagers;
-import ovh.paulem.namedvillagers.generator.api.impl.NameParserGate;
+import net.paulem.namedvillagers.NamedVillagers;
+import net.paulem.namedvillagers.generator.api.impl.NameParserGate;
 
 public enum API {
     NONE(
