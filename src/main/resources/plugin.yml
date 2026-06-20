@@ -1,0 +1,10 @@
+name: Named-Villagers
+main: net.paulem.namedvillagers.NamedVillagers
+version: ${version}
+author: Paulem
+description: Gives all villagers a name to enhance your world !
+load: STARTUP
+website: https://paulem.ovh
+api-version: 1.14
+softdepend:
+  - ProtocolLib

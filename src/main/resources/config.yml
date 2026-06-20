@@ -1,0 +1,37 @@
+# If you want to generate male, female, or both, names.
+# - BOTH (both)
+# - FEMALE (female)
+# - MALE (male)
+gender: BOTH
+
+# How to show the villager's name and profession in his interface
+# %n is the name, %p is the profession
+# Default: "%n the %p"
+interface-name: "%n the %p"
+
+# Gender in the api uses gender above
+api:
+  # Supported APIs:
+  # - NONE (use default included names)
+  # - NAMEPARSER (https://parser.name)
+  # Default: NONE
+  type: NONE
+
+  # The api key for the selected API
+  # NONE does not require an api key
+  key: "YOUR_API_KEY"
+
+  # The language from where the names come from
+  # Uses https://en.wikipedia.org/wiki/ISO_3166-2
+  # Default: NULL
+  country-code: NULL
+
+# Add a prefix to the illagers. You can do things like "Evil [NAME]" by typing illager-prefix: "Evil"
+# default: "" or NULL
+illager-prefix: ""
+
+# Send anonymous statistics to the developer
+bstats: true
+
+# DON'T TOUCH THIS
+version: 2
