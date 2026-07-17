@@ -42,7 +42,7 @@ dependencies {
 
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
 
-    implementation("org.bstats:bstats-bukkit:3.1.0")
+    implementation("org.bstats:bstats-bukkit:3.2.1")
 
     implementation("com.jeff_media:SpigotUpdateChecker:3.0.4") {
         exclude(group = "com.github.Anon8281", module = "UniversalScheduler")
